@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Display - OAS Bay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="rgba(255,255,255,0.22)"/>
+            <path d="M6 16 C6 16 7 12 14 12 C21 12 22 16 22 16 L24 16 L24 20 L4 20 L4 16 Z" fill="#fff" opacity="0.95"/>
+            <circle cx="10" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="18" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <path d="M8 16 L10 11 M18 11 L20 16" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Oyera Auto Service Bay Ltd</h1>
+          <p>Service bay records system</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Dashboard</a>
+        <a href="customer-registration.html">Customer Registration</a>
+        <a href="technician-registration.html">Technician Registration</a>
+        <a href="customer-display.html" class="active">Customer Display</a>
+      </nav>
+      <div class="sidebar-footer">
+        <strong>Customer display</strong><br>
+        Search and view saved customer and vehicle service records.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; gap: 18px; align-items: flex-start;">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+            <rect width="56" height="56" rx="14" fill="var(--primary)"/>
+            <rect x="12" y="18" width="32" height="20" rx="4" fill="#fff"/>
+            <circle cx="20" cy="40" r="4" fill="var(--primary)"/>
+            <circle cx="36" cy="40" r="4" fill="var(--primary)"/>
+            <path d="M12 26 L12 22 C12 20 14 18 16 18 L40 18 C42 18 44 20 44 22 L44 26" stroke="var(--primary)" stroke-width="2"/>
+            <rect x="18" y="36" width="8" height="8" rx="2" fill="var(--primary)" opacity="0.2"/>
+            <text x="28" y="44" text-anchor="middle" fill="var(--primary)" font-size="7" font-weight="800">OAS</text>
+          </svg>
+          <div>
+            <h2>Customer Display / View Page</h2>
+            <p>View all customer visits, selected services, parts purchased, assigned technicians, and total charges.</p>
+          </div>
+        </div>
+        <span class="badge">Customer Records</span>
+      </header>
+
+      <section class="card">
+        <div class="card-title">
+          <h3>Search Customers</h3>
+          <div class="actions">
+            <button id="refreshBtn" class="btn secondary small" type="button">Refresh</button>
+            <button id="exportBtn" class="btn secondary small" type="button">Export CSV</button>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="searchInput">Search by name, phone, vehicle registration, or service</label>
+            <input id="searchInput" type="search" placeholder="e.g. UAX 123A, engine oil, 077...">
+          </div>
+          <div class="field">
+            <label for="statusFilter">Service Status</label>
+            <select id="statusFilter">
+              <option value="">All statuses</option>
+              <option value="Received">Received</option>
+              <option value="In service bay">In service bay</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top: 18px;">
+        <div class="card-title">
+          <h3>Customer Records</h3>
+          <span id="displayCount" class="badge">0</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Services</th>
+                <th>Parts / Cost</th>
+                <th>Technicians</th>
+                <th>Total</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="customerTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <header>
+        <h3 id="modalTitle">Customer Details</h3>
+        <button class="close" type="button" data-close-modal aria-label="Close modal">×</button>
+      </header>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const table = document.getElementById('customerTable');
+      const count = document.getElementById('displayCount');
+      const searchInput = document.getElementById('searchInput');
+      const statusFilter = document.getElementById('statusFilter');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const exportBtn = document.getElementById('exportBtn');
+      const modal = document.getElementById('detailModal');
+      const modalBody = document.getElementById('modalBody');
+
+      function getFilteredCustomers() {
+        const query = searchInput.value.trim().toLowerCase();
+        const status = statusFilter.value;
+        const customers = readStorage(OAS_STORAGE.customers);
+
+        return customers.filter((customer) => {
+          const haystack = [
+            customer.customerName,
+            customer.phone,
+            customer.email,
+            customer.address,
+            customer.vehicleReg,
+            customer.make,
+            customer.model,
+            customer.color,
+            customer.servicesLabel,
+            customer.partsNeeded,
+            customer.status
+          ].join(' ').toLowerCase();
+
+          return haystack.includes(query) && (!status || customer.status === status);
+        });
+      }
+
+      function renderCustomers() {
+        const customers = getFilteredCustomers();
+        count.textContent = customers.length;
+        table.innerHTML = '';
+
+        if (customers.length === 0) {
+          table.innerHTML = '<tr><td colspan="7"><div class="empty">No customer records found.</div></td></tr>';
+          return;
+        }
+
+        customers.forEach((customer) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <strong>${escapeHtml(customer.customerName)}</strong><br>
+              <span>${escapeHtml(customer.phone)}</span><br>
+              <span>${escapeHtml(customer.customerId)}</span>
+            </td>
+            <td>
+              ${escapeHtml(customer.vehicleReg)}<br>
+              <span>${escapeHtml(customer.make)} ${escapeHtml(customer.model)} • ${escapeHtml(customer.color)}</span>
+            </td>
+            <td>${escapeHtml(customer.servicesLabel)}</td>
+            <td>
+              ${escapeHtml(customer.partsNeeded || 'No parts listed')}<br>
+              <span>${formatCurrency(customer.partsCost)}</span>
+            </td>
+            <td>${escapeHtml(customer.technicianNames) || 'Not assigned'}</td>
+            <td><strong>${formatCurrency(customer.total)}</strong></td>
+            <td>
+              <div class="actions">
+                <button class="btn secondary small" data-view="${escapeHtml(customer.id)}">View</button>
+                <button class="btn danger small" data-delete="${escapeHtml(customer.id)}">Delete</button>
+              </div>
+            </td>
+          `;
+          table.appendChild(row);
+        });
+      }
+
+      function openModal(customer) {
+        modalBody.innerHTML = `
+          <div class="detail-grid">
+            <div class="detail"><span>Customer ID</span><strong>${escapeHtml(customer.customerId)}</strong></div>
+            <div class="detail"><span>Registration Date</span><strong>${escapeHtml(formatDate(customer.createdAt))}</strong></div>
+            <div class="detail"><span>Customer Name</span><strong>${escapeHtml(customer.customerName)}</strong></div>
+            <div class="detail"><span>Phone</span><strong>${escapeHtml(customer.phone)}</strong></div>
+            <div class="detail"><span>Email</span><strong>${escapeHtml(customer.email || 'Not provided')}</strong></div>
+            <div class="detail"><span>Address</span><strong>${escapeHtml(customer.address || 'Not provided')}</strong></div>
+            <div class="detail"><span>Vehicle Registration</span><strong>${escapeHtml(customer.vehicleReg)}</strong></div>
+            <div class="detail"><span>Vehicle</span><strong>${escapeHtml(customer.make)} ${escapeHtml(customer.model)} • ${escapeHtml(customer.color)}</strong></div>
+            <div class="detail"><span>VIN / Chassis</span><strong>${escapeHtml(customer.vin || 'Not provided')}</strong></div>
+            <div class="detail"><span>Status</span><strong>${escapeHtml(customer.status)}</strong></div>
+            <div class="detail"><span>Services</span><strong>${escapeHtml(customer.servicesLabel)}</strong></div>
+            <div class="detail"><span>Assigned Technicians</span><strong>${escapeHtml(customer.technicianNames || 'Not assigned')}</strong></div>
+            <div class="detail full"><span>Parts Needed</span><strong>${escapeHtml(customer.partsNeeded || 'No parts listed')}</strong></div>
+            <div class="detail"><span>Labour Charge</span><strong>${formatCurrency(customer.labour)}</strong></div>
+            <div class="detail"><span>Alignment Charge</span><strong>${formatCurrency(customer.alignment)}</strong></div>
+            <div class="detail"><span>Balance Charge</span><strong>${formatCurrency(customer.balance)}</strong></div>
+            <div class="detail"><span>Parts Cost</span><strong>${formatCurrency(customer.partsCost)}</strong></div>
+            <div class="detail"><span>Total Charged</span><strong>${formatCurrency(customer.total)}</strong></div>
+            <div class="detail full"><span>Notes</span><strong>${escapeHtml(customer.notes || 'No notes')}</strong></div>
+          </div>
+        `;
+        modal.classList.add('open');
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+      }
+
+      function exportCsv() {
+        const customers = getFilteredCustomers();
+        if (customers.length === 0) {
+          showToast('No customer records to export.');
+          return;
+        }
+
+        const headers = [
+          'Customer ID',
+          'Customer Name',
+          'Phone',
+          'Vehicle Registration',
+          'Vehicle',
+          'Services',
+          'Parts Needed',
+          'Parts Cost',
+          'Labour',
+          'Alignment',
+          'Balance',
+          'Total',
+          'Technicians',
+          'Status',
+          'Created At'
+        ];
+
+        const rows = customers.map((customer) => [
+          customer.customerId,
+          customer.customerName,
+          customer.phone,
+          customer.vehicleReg,
+          `${customer.make} ${customer.model} ${customer.color}`,
+          customer.servicesLabel,
+          customer.partsNeeded,
+          customer.partsCost,
+          customer.labour,
+          customer.alignment,
+          customer.balance,
+          customer.total,
+          customer.technicianNames,
+          customer.status,
+          customer.createdAt
+        ]);
+
+        const csv = [headers, ...rows].map((row) => row.map((cell) => `"${String(cell || '').replaceAll('"', '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `oas-bay-customers-${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      searchInput.addEventListener('input', renderCustomers);
+      statusFilter.addEventListener('change', renderCustomers);
+      refreshBtn.addEventListener('click', renderCustomers);
+      exportBtn.addEventListener('click', exportCsv);
+
+      table.addEventListener('click', (event) => {
+        const viewButton = event.target.closest('[data-view]');
+        const deleteButton = event.target.closest('[data-delete]');
+
+        if (viewButton) {
+          const customer = readStorage(OAS_STORAGE.customers).find((item) => item.id === viewButton.dataset.view);
+          if (customer) openModal(customer);
+        }
+
+        if (deleteButton) {
+          const confirmed = confirm('Delete this customer record?');
+          if (!confirmed) return;
+
+          const customers = readStorage(OAS_STORAGE.customers).filter((customer) => customer.id !== deleteButton.dataset.delete);
+          writeStorage(OAS_STORAGE.customers, customers);
+          updateStats();
+          renderCustomers();
+          showToast('Customer record deleted.');
+        }
+      });
+
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal || event.target.closest('[data-close-modal]')) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeModal();
+      });
+
+      renderCustomers();
+    });
+  </script>
+</body>
+</html>

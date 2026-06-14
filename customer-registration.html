@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Registration - OAS Bay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="rgba(255,255,255,0.22)"/>
+            <path d="M6 16 C6 16 7 12 14 12 C21 12 22 16 22 16 L24 16 L24 20 L4 20 L4 16 Z" fill="#fff" opacity="0.95"/>
+            <circle cx="10" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="18" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <path d="M8 16 L10 11 M18 11 L20 16" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Oyera Auto Service Bay Ltd</h1>
+          <p>Service bay records system</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Dashboard</a>
+        <a href="customer-registration.html" class="active">Customer Registration</a>
+        <a href="technician-registration.html">Technician Registration</a>
+        <a href="customer-display.html">Customer Display</a>
+      </nav>
+      <div class="sidebar-footer">
+        <strong>Parts ranges (UGX)</strong><br>
+        Engine oil: 79,000 – 200,000<br>
+        Brake fluid: 13,000 – 20,000<br>
+        Oil filter: 15,000 – 20,000<br><br>
+        Senior technician identifies needed parts and oils; owner buys them at these rates.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h2>Customer Registration</h2>
+          <p>Register a customer visit, selected services, purchased parts, assigned technicians, and the calculated service charge.</p>
+        </div>
+        <span class="badge">New Visit</span>
+      </header>
+
+      <section class="grid two">
+        <article class="card">
+          <div class="card-title">
+            <h3>Customer and Vehicle Details</h3>
+          </div>
+
+          <div id="notice" class="notice" role="status"></div>
+
+          <form id="customerForm" class="form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="customerName">Customer Name</label>
+                <input id="customerName" name="customerName" type="text" required placeholder="e.g. Nankunda Grace">
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" name="phone" type="tel" required placeholder="07...">
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="customer@example.com">
+              </div>
+              <div class="field">
+                <label for="address">Address</label>
+                <input id="address" name="address" type="text" placeholder="Location or address">
+              </div>
+              <div class="field">
+                <label for="vehicleReg">Vehicle Registration</label>
+                <input id="vehicleReg" name="vehicleReg" type="text" required placeholder="e.g. UAX 123A">
+              </div>
+              <div class="field">
+                <label for="make">Vehicle Make</label>
+                <input id="make" name="make" type="text" required placeholder="e.g. Toyota">
+              </div>
+              <div class="field">
+                <label for="model">Vehicle Model</label>
+                <input id="model" name="model" type="text" required placeholder="e.g. Corolla">
+              </div>
+              <div class="field">
+                <label for="color">Color</label>
+                <input id="color" name="color" type="text" placeholder="e.g. Silver">
+              </div>
+              <div class="field">
+                <label for="vin">VIN / Chassis Number</label>
+                <input id="vin" name="vin" type="text" placeholder="Optional">
+              </div>
+              <div class="field">
+                <label for="status">Service Status</label>
+                <select id="status" name="status" required>
+                  <option value="Received">Received</option>
+                  <option value="In service bay">In service bay</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-title">
+            <h3>Services, Parts, and Charges</h3>
+          </div>
+
+          <form id="serviceForm" class="form">
+            <div class="field">
+              <label>Required Services</label>
+              <div class="checkbox-grid">
+                <label class="check-option"><input type="checkbox" name="services" value="engine_oil_filter"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="6" width="10" height="10" rx="2" fill="var(--primary)" opacity="0.7"/><path d="M13 10 L17 10" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"/><rect x="16" y="8" width="2" height="4" rx="1" fill="var(--primary)" opacity="0.4"/></svg><span>Engine oil and filter</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="gearbox_oil_filter"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="12" height="6" rx="1.5" stroke="var(--primary)" stroke-width="1.5"/><circle cx="7" cy="11" r="1" fill="var(--primary)"/><circle cx="13" cy="11" r="1" fill="var(--primary)"/><rect x="2" y="5" width="4" height="10" rx="1" fill="var(--accent)" opacity="0.7"/></svg><span>Gearbox oil and filter</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="brake_fluid"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3 L17 7 V13 L10 17 L3 13 V7 Z" stroke="var(--primary)" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10 L10 13 M10 13 L8 11" stroke="var(--danger)" stroke-width="1.5" stroke-linecap="round"/></svg><span>Brake fluid</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="brake_pads"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="10" width="14" height="6" rx="2" stroke="var(--primary)" stroke-width="1.5"/><circle cx="8" cy="13" r="2" fill="var(--danger)" opacity="0.7"/><circle cx="12" cy="13" r="2" fill="var(--danger)" opacity="0.7"/></svg><span>Brake pads</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="greasing"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3 C10 3 14 6 14 10 C14 13 12 15 10 15 C8 15 6 13 6 10 C6 6 10 3 10 3 Z" fill="var(--accent)" opacity="0.7"/><rect x="9" y="14" width="2" height="3" rx="1" fill="var(--primary)"/></svg><span>Greasing</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="minor_repairs"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="10" height="10" rx="2" stroke="var(--primary)" stroke-width="1.5"/><path d="M8 8 L12 12 M12 8 L8 12" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"/></svg><span>Minor repairs</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="wheel_alignment"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7" stroke="var(--primary)" stroke-width="1.5"/><circle cx="10" cy="10" r="3" fill="var(--accent)" opacity="0.6"/><path d="M13 4 L16 1 M16 10 L20 10 M13 16 L16 19" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"/></svg><span>Wheel alignment</span></label>
+                <label class="check-option"><input type="checkbox" name="services" value="wheel_balance"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7" stroke="var(--primary)" stroke-width="1.5"/><circle cx="10" cy="10" r="3" stroke="var(--primary)" stroke-width="1.5"/><circle cx="10" cy="10" r="1" fill="var(--accent)"/><circle cx="6" cy="8" r="1.5" fill="var(--danger)" opacity="0.7"/><circle cx="14" cy="12" r="1.5" fill="var(--danger)" opacity="0.7"/></svg><span>Wheel balance</span></label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="technicianSelect">Assigned Technician(s)</label>
+              <select id="technicianSelect" data-technician-select multiple></select>
+            </div>
+
+            <div class="field full">
+              <label for="partsNeeded">Parts and Oils Needed</label>
+              <textarea id="partsNeeded" placeholder="e.g. 4 litres engine oil, oil filter, brake fluid, brake pads"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="partsCost">Parts and Oils Cost (UGX)</label>
+              <input id="partsCost" type="number" min="0" step="1000" placeholder="e.g. 120000">
+              <small style="color: var(--muted);">Ranges: engine oil 79,000–200,000 | brake fluid 13,000–20,000 | oil filter 15,000–20,000</small>
+            </div>
+
+            <div class="price-box" aria-live="polite">
+              <div class="price-row"><span>Labour charge</span><strong id="labourEstimate">UGX 0</strong></div>
+              <div class="price-row"><span>Wheel alignment charge</span><strong id="alignmentEstimate">UGX 0</strong></div>
+              <div class="price-row"><span>Wheel balance charge</span><strong id="balanceEstimate">UGX 0</strong></div>
+              <div class="price-row"><span>Parts and oils cost</span><strong id="partsEstimate">UGX 0</strong></div>
+              <div class="price-row total"><span>Estimated total</span><strong id="totalEstimate">UGX 0</strong></div>
+            </div>
+
+            <div class="field full">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" placeholder="Technician observations, owner instructions, or follow-up remarks"></textarea>
+            </div>
+
+            <div class="actions">
+              <button class="btn" type="submit">Save Customer Record</button>
+              <button class="btn secondary" type="button" id="resetBtn">Clear Forms</button>
+            </div>
+          </form>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const customerForm = document.getElementById('customerForm');
+      const serviceForm = document.getElementById('serviceForm');
+      const resetBtn = document.getElementById('resetBtn');
+      const serviceInputs = document.querySelectorAll('input[name="services"]');
+      const partsCost = document.getElementById('partsCost');
+
+      const labourEstimate = document.getElementById('labourEstimate');
+      const alignmentEstimate = document.getElementById('alignmentEstimate');
+      const balanceEstimate = document.getElementById('balanceEstimate');
+      const partsEstimate = document.getElementById('partsEstimate');
+      const totalEstimate = document.getElementById('totalEstimate');
+
+      function updateEstimate() {
+        const services = getCheckedValues('services');
+        const fees = getServiceFees(services);
+        const parts = Number(partsCost.value) || 0;
+        const total = fees.total + parts;
+
+        labourEstimate.textContent = formatCurrency(fees.labour);
+        alignmentEstimate.textContent = formatCurrency(fees.alignment);
+        balanceEstimate.textContent = formatCurrency(fees.balance);
+        partsEstimate.textContent = formatCurrency(parts);
+        totalEstimate.textContent = formatCurrency(total);
+
+        return {
+          fees,
+          parts,
+          total
+        };
+      }
+
+      serviceInputs.forEach((input) => input.addEventListener('change', updateEstimate));
+      partsCost.addEventListener('input', updateEstimate);
+
+      customerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        showToast('Customer details captured. Select services and save the customer record.');
+      });
+
+      serviceForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const services = getCheckedValues('services');
+        if (services.length === 0) {
+          showToast('Select at least one service before saving.');
+          return;
+        }
+
+        const requiredIds = ['customerName', 'phone', 'vehicleReg', 'make', 'model'];
+        const missing = requiredIds.some((id) => !document.getElementById(id).value.trim());
+        if (missing) {
+          showToast('Complete the required customer and vehicle details first.');
+          return;
+        }
+
+        const customers = readStorage(OAS_STORAGE.customers);
+        const selectedTechnicianIds = Array.from(document.getElementById('technicianSelect').selectedOptions).map((option) => option.value);
+        const technicians = readStorage(OAS_STORAGE.technicians);
+        const technicianNames = selectedTechnicianIds
+          .map((id) => technicians.find((technician) => technician.id === id))
+          .filter(Boolean)
+          .map((technician) => technician.fullName)
+          .join(', ');
+
+        const estimate = updateEstimate();
+        const customer = {
+          id: makeId('CUST'),
+          customerId: `CUS-${customers.length + 1}`.padStart(8, '0'),
+          createdAt: new Date().toISOString(),
+          customerName: document.getElementById('customerName').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          vehicleReg: document.getElementById('vehicleReg').value.trim(),
+          make: document.getElementById('make').value.trim(),
+          model: document.getElementById('model').value.trim(),
+          color: document.getElementById('color').value.trim(),
+          vin: document.getElementById('vin').value.trim(),
+          status: document.getElementById('status').value,
+          services,
+          servicesLabel: getServiceLabels(services).join(', '),
+          partsNeeded: document.getElementById('partsNeeded').value.trim(),
+          partsCost: estimate.parts,
+          labour: estimate.fees.labour,
+          alignment: estimate.fees.alignment,
+          balance: estimate.fees.balance,
+          total: estimate.total,
+          assignedTechnicians: selectedTechnicianIds,
+          technicianNames,
+          notes: document.getElementById('notes').value.trim()
+        };
+
+        customers.push(customer);
+        writeStorage(OAS_STORAGE.customers, customers);
+        updateStats();
+        renderRecentCustomers();
+        showToast('Customer service record saved successfully.');
+        customerForm.reset();
+        serviceForm.reset();
+        updateEstimate();
+      });
+
+      resetBtn.addEventListener('click', () => {
+        customerForm.reset();
+        serviceForm.reset();
+        updateEstimate();
+      });
+
+      updateEstimate();
+    });
+  </script>
+</body>
+</html>

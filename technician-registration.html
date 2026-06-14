@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technician Registration - OAS Bay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="rgba(255,255,255,0.22)"/>
+            <path d="M6 16 C6 16 7 12 14 12 C21 12 22 16 22 16 L24 16 L24 20 L4 20 L4 16 Z" fill="#fff" opacity="0.95"/>
+            <circle cx="10" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="18" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <path d="M8 16 L10 11 M18 11 L20 16" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Oyera Auto Service Bay Ltd</h1>
+          <p>Service bay records system</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Dashboard</a>
+        <a href="customer-registration.html">Customer Registration</a>
+        <a href="technician-registration.html" class="active">Technician Registration</a>
+        <a href="customer-display.html">Customer Display</a>
+      </nav>
+      <div class="sidebar-footer">
+        <strong>Technician module</strong><br>
+        Register technicians and assign them to one or more car services.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; gap: 18px; align-items: flex-start;">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+            <rect width="56" height="56" rx="14" fill="var(--primary)"/>
+            <path d="M28 16 C22 16 18 20 18 26 C18 32 24 38 28 40 C32 38 38 32 38 26 C38 20 34 16 28 16 Z" fill="var(--accent)" opacity="0.9"/>
+            <circle cx="28" cy="26" r="5" fill="#fff"/>
+            <path d="M18 42 L22 38 M38 42 L34 38 M28 44 V 42" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h2>Technician Registration</h2>
+            <p>Add service bay technicians who handle engine oil, filters, brake work, greasing, wheel alignment, wheel balance, and minor repairs.</p>
+          </div>
+        </div>
+        <span class="badge">Staff Records</span>
+      </header>
+
+      <section class="grid two">
+        <article class="card">
+          <div class="card-title">
+            <h3>Register Technician</h3>
+          </div>
+
+          <div id="notice" class="notice" role="status"></div>
+
+          <form id="technicianForm" class="form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" name="fullName" type="text" required placeholder="e.g. Okello John">
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" name="phone" type="tel" required placeholder="07...">
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="technician@example.com">
+              </div>
+              <div class="field">
+                <label for="specialty">Specialty</label>
+                <select id="specialty" name="specialty" required>
+                  <option value="">Select specialty</option>
+                  <option value="Engine oil and filters">Engine oil and filters</option>
+                  <option value="Gearbox oil and filters">Gearbox oil and filters</option>
+                  <option value="Brake fluids and pads">Brake fluids and pads</option>
+                  <option value="Wheel alignment and balance">Wheel alignment and balance</option>
+                  <option value="Greasing and minor repairs">Greasing and minor repairs</option>
+                  <option value="General service">General service</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="yearsExperience">Years of Experience</label>
+                <input id="yearsExperience" name="yearsExperience" type="number" min="0" max="60" placeholder="2">
+              </div>
+              <div class="field">
+                <label for="status">Availability</label>
+                <select id="status" name="status" required>
+                  <option value="Available">Available</option>
+                  <option value="Busy">Busy</option>
+                  <option value="Off duty">Off duty</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="notes">Notes</label>
+                <textarea id="notes" name="notes" placeholder="Additional skills, shift notes, or remarks"></textarea>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn" type="submit">Save Technician</button>
+              <button class="btn secondary" type="reset">Clear Form</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-title">
+            <h3>Registered Technicians</h3>
+            <span id="technicianListCount" class="badge">0</span>
+          </div>
+          <div id="technicianList" class="recent-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('technicianForm');
+      const list = document.getElementById('technicianList');
+      const count = document.getElementById('technicianListCount');
+
+      function renderTechnicians() {
+        const technicians = readStorage(OAS_STORAGE.technicians);
+        count.textContent = technicians.length;
+        list.innerHTML = '';
+
+        if (technicians.length === 0) {
+          list.innerHTML = '<div class="empty">No technicians registered yet.</div>';
+          return;
+        }
+
+        technicians.forEach((technician) => {
+          const item = document.createElement('div');
+          item.className = 'recent-item';
+          item.innerHTML = `
+            <strong>${escapeHtml(technician.fullName)}</strong>
+            <span>${escapeHtml(technician.phone)} • ${escapeHtml(technician.specialty)}</span>
+            <span> • ${escapeHtml(technician.status)}</span>
+            <div class="actions" style="margin-top: 12px;">
+              <button class="btn danger small" data-delete="${escapeHtml(technician.id)}">Delete</button>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const technicians = readStorage(OAS_STORAGE.technicians);
+        const technician = {
+          id: makeId('TECH'),
+          technicianId: `TECH-${technicians.length + 1}`.padStart(9, '0'),
+          fullName: document.getElementById('fullName').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          specialty: document.getElementById('specialty').value,
+          yearsExperience: document.getElementById('yearsExperience').value,
+          status: document.getElementById('status').value,
+          notes: document.getElementById('notes').value.trim(),
+          createdAt: new Date().toISOString()
+        };
+
+        technicians.push(technician);
+        writeStorage(OAS_STORAGE.technicians, technicians);
+        populateTechnicianSelects();
+        renderTechnicians();
+        updateStats();
+        showToast('Technician registered successfully.');
+        form.reset();
+      });
+
+      list.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-delete]');
+        if (!button) return;
+
+        const technicians = readStorage(OAS_STORAGE.technicians).filter((technician) => technician.id !== button.dataset.delete);
+        writeStorage(OAS_STORAGE.technicians, technicians);
+        populateTechnicianSelects();
+        renderTechnicians();
+        updateStats();
+        showToast('Technician record deleted.');
+      });
+
+      renderTechnicians();
+    });
+  </script>
+</body>
+</html>

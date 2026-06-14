@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAS Bay - Service Records</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="rgba(255,255,255,0.22)"/>
+            <path d="M6 16 C6 16 7 12 14 12 C21 12 22 16 22 16 L24 16 L24 20 L4 20 L4 16 Z" fill="#fff" opacity="0.95"/>
+            <circle cx="10" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="18" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+            <path d="M8 16 L10 11 M18 11 L20 16" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Oyera Auto Service Bay Ltd</h1>
+          <p>Service bay records system</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html" class="active">Dashboard</a>
+        <a href="customer-registration.html">Customer Registration</a>
+        <a href="technician-registration.html">Technician Registration</a>
+        <a href="customer-display.html">Customer Display</a>
+      </nav>
+      <div class="sidebar-footer">
+        <strong>UGX pricing guide</strong><br>
+        Labour per visit: 20,000<br>
+        Wheel alignment: 30,000<br>
+        Wheel balance: 20,000<br><br>
+        <strong>Parts ranges:</strong><br>
+        Engine oil: 79,000 – 200,000<br>
+        Brake fluid: 13,000 – 20,000<br>
+        Oil filter: 15,000 – 20,000
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h2>Service Bay Dashboard</h2>
+          <p>Manage customer visits, service requests, assigned technicians, parts, and charges for Oyera Auto Service Bay Ltd.</p>
+        </div>
+        <span class="badge">Records Management System</span>
+      </header>
+
+      <section class="grid four" aria-label="Summary statistics">
+        <article class="card stat">
+          <div>
+            <span>Registered Customers</span>
+            <strong id="customerCount">0</strong>
+          </div>
+          <div class="stat-icon">C</div>
+        </article>
+        <article class="card stat">
+          <div>
+            <span>Technicians</span>
+            <strong id="technicianCount">0</strong>
+          </div>
+          <div class="stat-icon">T</div>
+        </article>
+        <article class="card stat">
+          <div>
+            <span>Services Recorded</span>
+            <strong id="serviceCount">0</strong>
+          </div>
+          <div class="stat-icon">S</div>
+        </article>
+        <article class="card stat">
+          <div>
+            <span>Estimated Revenue</span>
+            <strong id="revenueCount">UGX 0</strong>
+          </div>
+          <div class="stat-icon">UGX</div>
+        </article>
+      </section>
+
+      <section class="grid two" style="margin-top: 18px;">
+        <article class="card" style="display: flex; flex-direction: column; gap: 18px;">
+          <div class="card-title">
+            <h3>Quick Actions</h3>
+          </div>
+          <p style="color: var(--muted); margin: 0;">Manage customer visits, service requests, assigned technicians, parts, and charges for Oyera Auto Service Bay Ltd. Use the quick links below or navigate with the sidebar.</p>
+          <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 160px; border-radius: 12px;">
+            <rect width="400" height="180" rx="12" fill="#f1f6fb"/>
+            <rect x="20" y="30" width="140" height="90" rx="12" fill="var(--primary)" opacity="0.9"/>
+            <rect x="30" y="38" width="120" height="14" rx="4" fill="#fff"/>
+            <rect x="30" y="58" width="100" height="10" rx="4" fill="rgba(255,255,255,0.7)"/>
+            <rect x="30" y="73" width="110" height="10" rx="4" fill="rgba(255,255,255,0.7)"/>
+            <rect x="30" y="105" width="100" height="22" rx="8" fill="var(--accent)"/>
+            <circle cx="65" cy="116" r="8" fill="none" stroke="#fff" stroke-width="2"/>
+            <path d="M70 60 l15 -15 l15 15" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+            <rect x="180" y="30" width="200" height="90" rx="12" fill="var(--primary)"/>
+            <rect x="190" y="38" width="180" height="12" rx="4" fill="#fff"/>
+            <rect x="190" y="56" width="160" height="10" rx="4" fill="rgba(255,255,255,0.7)"/>
+            <rect x="190" y="68" width="170" height="10" rx="4" fill="rgba(255,255,255,0.7)"/>
+            <rect x="190" y="100" width="80" height="22" rx="8" fill="var(--accent)"/>
+            <text x="230" y="115" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">Explore →</text>
+            <rect x="50" y="145" width="60" height="16" rx="8" fill="var(--success)"/>
+            <rect x="130" y="145" width="70" height="16" rx="8" fill="var(--accent)"/>
+            <rect x="220" y="145" width="60" height="16" rx="8" fill="var(--primary-dark)"/>
+            <circle cx="380" cy="20" r="10" fill="var(--primary)"/>
+            <text x="380" y="24" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">+2</text>
+          </svg>
+          <div class="quick-links">
+            <a class="quick-link" href="customer-registration.html">
+              <div>
+                <strong>Register Customer Visit</strong>
+                <span>Record customer details, vehicle, services, parts, and total charges.</span>
+              </div>
+              <span>Start →</span>
+            </a>
+            <a class="quick-link" href="technician-registration.html">
+              <div>
+                <strong>Register Technician</strong>
+                <span>Add technicians who can be assigned to car services.</span>
+              </div>
+              <span>Add →</span>
+            </a>
+            <a class="quick-link" href="customer-display.html">
+              <div>
+                <strong>View Customers</strong>
+                <span>Search, view, and manage saved customer service records.</span>
+              </div>
+              <span>View →</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-title">
+            <h3>Recent Customer Records</h3>
+          </div>
+          <div id="recentCustomers" class="recent-list"></div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 18px;">
+        <div class="card-title">
+          <h3>Standard Service Charges</h3>
+        </div>
+        <div class="grid three">
+          <div class="price-box">
+            <strong>Labour</strong>
+            <span class="price-row total"><span>General service labour</span><strong>UGX 20,000</strong></span>
+          </div>
+          <div class="price-box">
+            <strong>Wheel Alignment</strong>
+            <span class="price-row total"><span>Per vehicle</span><strong>UGX 30,000</strong></span>
+          </div>
+          <div class="price-box">
+            <strong>Wheel Balance</strong>
+            <span class="price-row total"><span>Per vehicle</span><strong>UGX 20,000</strong></span>
+          </div>
+        </div>
+        <div class="grid three" style="margin-top: 12px;">
+          <div class="price-box">
+            <strong>Engine Oil</strong>
+            <span class="price-row total"><span>Per service</span><strong>UGX 79,000 – 200,000</strong></span>
+          </div>
+          <div class="price-box">
+            <strong>Brake Fluid</strong>
+            <span class="price-row total"><span>Per service</span><strong>UGX 13,000 – 20,000</strong></span>
+          </div>
+          <div class="price-box">
+            <strong>Oil Filter</strong>
+            <span class="price-row total"><span>Per unit</span><strong>UGX 15,000 – 20,000</strong></span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
